@@ -43,6 +43,8 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
 
   const handleOk = useCallback(() => {
     setInnerEditing(undefined);
+    setEditTitle("");
+    setEditEsimated("");
     onChange(
       modify(tasks, (tasks) => {
         for (const task of tasks) {
@@ -58,6 +60,8 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
   const handleCancel = useCallback(() => {
     setInnerEditing(undefined);
     setEditing(false);
+    setEditTitle("");
+    setEditEsimated("");
     onChange(modify(tasks));
   }, [onChange, setEditing, tasks]);
 

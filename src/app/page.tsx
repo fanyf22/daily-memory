@@ -12,7 +12,7 @@ import {
 } from "@lib/task.ts";
 import { Button, DatePicker, Flex, message, Space, Tooltip } from "antd";
 import dayjs from "dayjs";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 const HomePage: FC = () => {
   const [tasks, setTasks] = useState<Tasks>({});
@@ -54,10 +54,10 @@ const HomePage: FC = () => {
   }, [date, editing, messageApi, tasks]);
 
   const handleChange = useCallback(
-    (task: Task[]) => {
+    (taskList: Task[]) => {
       const updated = updateTasks(
         tasks,
-        task.filter((task) => task.title),
+        taskList.filter((task) => task.title),
         date
       );
       setTasks(updated);
@@ -76,6 +76,12 @@ const HomePage: FC = () => {
     window.addEventListener("keypress", handler);
     return () => window.removeEventListener("keypress", handler);
   });
+
+  const taskList = useMemo(() => getTasks(tasks, date), [tasks, date]);
+  const finished = useMemo(
+    () => taskList.reduce((count, { finished }) => (finished ? count + 1 : count), 0),
+    [taskList]
+  );
 
   return (
     <div className="h-full flex flex-col items-center p-16">
@@ -98,8 +104,12 @@ const HomePage: FC = () => {
           </Space>
           <Button onClick={handleCreate}>New Task</Button>
         </Flex>
-        <TaskTable tasks={getTasks(tasks, date)} setEditing={setEditing} onChange={handleChange} />
-        {getTasks(tasks, date).some((task) => !task.finished) ? null : (
+        <TaskTable tasks={taskList} setEditing={setEditing} onChange={handleChange} />
+        {!taskList.length || taskList.some((task) => !task.finished) ? (
+          <p className="text-stone-600 text-center">
+            You have finished {finished} out of {taskList.length} tasks. Cheer up!
+          </p>
+        ) : (
           <p className="text-red-700 text-center">
             Congratulations! You have finished all tasks for today!
             <br />
