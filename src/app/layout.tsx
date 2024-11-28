@@ -1,3 +1,4 @@
+import { GithubOutlined } from "@ant-design/icons";
 import { ConfigProvider } from "antd";
 import { FC } from "react";
 import { Outlet } from "react-router";
@@ -16,13 +17,17 @@ const RootLayout: FC = () => {
             <p className="italic text-gray-700 font-sans">
               Write down your daily tasks and supervise yourself.
             </p>
+            <div className="flex-1"></div>
+            <a target="_blank" href="https://github.com/fanyf22/daily-memory.git">
+              <GithubOutlined style={{ fontSize: "1.5rem" }} />
+            </a>
           </div>
         </header>
         <main className="flex-1">
           <Outlet />
         </main>
         <footer className="pb-2">
-          <p className="text-center text-gray-500">
+          <p className="text-center text-sm text-gray-500">
             &copy; {new Date().getFullYear()} Philip Fan. All rights reserved.
           </p>
         </footer>
