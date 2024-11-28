@@ -1,0 +1,14 @@
+@import "@fontsource-variable/montserrat";
+@import "@fontsource-variable/rokkitt";
+@import "@fontsource-variable/fira-code";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  @apply font-sans;
+}
