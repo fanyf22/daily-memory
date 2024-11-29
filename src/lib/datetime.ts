@@ -1,7 +1,14 @@
+import dayjs from "dayjs";
+
 export interface Day {
   year: number;
-  month: number;
+  month: number; // Start from 0
   day: number;
+}
+
+export interface Time {
+  hour: number;
+  minute: number;
 }
 
 function isLeapYear(year: number): boolean {
@@ -14,8 +21,8 @@ function getDays(year: number): number[] {
 
 export const nextDay: (date: Day) => Day = ({ year, month, day }) => {
   const days = getDays(year);
-  if (day == days[month - 1]) {
-    if (month == 12) {
+  if (day == days[month]) {
+    if (month == 11) {
       return { year: year + 1, month: 1, day: 1 };
     } else {
       return { year, month: month + 1, day: 1 };
@@ -39,4 +46,24 @@ export const previousDay: (date: Day) => Day = ({ year, month, day }) => {
 
 export function dayToIndex(date: Day): number {
   return (date.year - 2024) * 366 + date.month * 31 + date.day;
+}
+
+export function dayToDayjs({ year, month, day }: Day): dayjs.Dayjs {
+  return dayjs().year(year).month(month).date(day);
+}
+
+export function dayjsToDay(date: dayjs.Dayjs): Day {
+  return { year: date.year(), month: date.month(), day: date.date() };
+}
+
+export function timeToDayjs({ hour, minute }: Time): dayjs.Dayjs {
+  return dayjs().hour(hour).minute(minute);
+}
+
+export function dayjsToTime(time: dayjs.Dayjs | null): Time | null {
+  return time ? { hour: time.hour(), minute: time.minute() } : null;
+}
+
+export function formatTime({ hour, minute }: Time): string {
+  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
 }

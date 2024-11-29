@@ -1,5 +1,16 @@
+import { dayjsToTime, formatTime, type Time, timeToDayjs } from "@lib/datetime.ts";
 import type { Task } from "@lib/task.ts";
-import { Checkbox, Input, InputRef, message, Space, Table, type TableProps } from "antd";
+import {
+  Checkbox,
+  Input,
+  type InputRef,
+  message,
+  Space,
+  Table,
+  type TableProps,
+  TimePicker,
+} from "antd";
+import type { PickerRef } from "rc-picker";
 import { type FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 function modify<T>(array: T[], modifier: (array: T[]) => T[] | undefined | void = () => {}): T[] {
@@ -17,13 +28,14 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
   tasks = tasks.sort((a, b) => (a.finished ? 1 : 0) - (b.finished ? 1 : 0));
 
   const [innerEditing, setInnerEditing] = useState<Task["key"]>();
-  const [editTitle, setEditTitle] = useState("");
-  const [editEstimated, setEditEsimated] = useState("");
+  const [title, setTitle] = useState("");
+  const [estimated, setEstimated] = useState("");
+  const [time, setTime] = useState<Time | null>(null);
 
   const editing: Task["key"] | undefined = useMemo(() => {
     for (const task of tasks) {
       if (task.title == "") {
-        setEditTitle("");
+        setTitle("");
         return task.key;
       }
     }
@@ -34,6 +46,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
 
   const titleEditor = useRef<InputRef>(null);
   const estimatedEditor = useRef<InputRef>(null);
+  const timeEditor = useRef<PickerRef>(null);
 
   useEffect(() => {
     titleEditor.current?.focus();
@@ -43,25 +56,26 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
 
   const handleOk = useCallback(() => {
     setInnerEditing(undefined);
-    setEditTitle("");
-    setEditEsimated("");
+    setTitle("");
+    setEstimated("");
     onChange(
       modify(tasks, (tasks) => {
         for (const task of tasks) {
           if (task.key == editing) {
-            task.title = editTitle;
-            task.estimated = editEstimated;
+            task.title = title;
+            task.estimated = estimated;
+            task.time = time;
           }
         }
       })
     );
-  }, [editEstimated, editTitle, editing, onChange, tasks]);
+  }, [onChange, tasks, editing, title, estimated, time]);
 
   const handleCancel = useCallback(() => {
     setInnerEditing(undefined);
     setEditing(false);
-    setEditTitle("");
-    setEditEsimated("");
+    setTitle("");
+    setEstimated("");
     onChange(modify(tasks));
   }, [onChange, setEditing, tasks]);
 
@@ -72,8 +86,8 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
         return;
       }
       setInnerEditing(key);
-      setEditTitle(title);
-      setEditEsimated(estimated);
+      setTitle(title);
+      setEstimated(estimated);
     },
     [editing, messageApi]
   );
@@ -104,7 +118,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
               defaultValue={title}
               placeholder="Task Title"
               className="w-36"
-              onChange={(e) => setEditTitle(e.target.value)}
+              onChange={(e) => setTitle(e.target.value)}
               onPressEnter={() => estimatedEditor.current?.focus()}
             />
           );
@@ -114,7 +128,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
       },
     },
     {
-      title: "Estimated Time",
+      title: "Estimated Duration",
       dataIndex: "estimated",
       key: "estimated",
       align: "center",
@@ -124,14 +138,34 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
             <Input
               ref={estimatedEditor}
               defaultValue={esimated}
-              placeholder="Estimated Time"
+              placeholder="Estimated Duration"
               className="w-36"
-              onChange={(e) => setEditEsimated(e.target.value)}
-              onPressEnter={handleOk}
+              onChange={(e) => setEstimated(e.target.value)}
+              onPressEnter={() => timeEditor.current?.focus()}
             />
           );
         } else {
           return esimated;
+        }
+      },
+    },
+    {
+      title: "Executed Time",
+      dataIndex: "time",
+      key: "time",
+      align: "center",
+      render: (time, { key }) => {
+        if (editing == key) {
+          return (
+            <TimePicker
+              ref={timeEditor}
+              format="HH:mm"
+              defaultValue={time ? timeToDayjs(time) : null}
+              onChange={(time) => setTime(dayjsToTime(time))}
+            />
+          );
+        } else {
+          return time ? formatTime(time) : "";
         }
       },
     },
@@ -172,14 +206,12 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
           ) : (
             <>
               <a
-                aria-disabled={!!editing}
                 className={editing ? "text-neutral-400 hover:cursor-not-allowed" : ""}
                 onClick={() => handleEdit({ key, title, estimated })}
               >
                 Edit
               </a>
               <a
-                aria-disabled={!!editing}
                 className={editing ? "text-neutral-400 hover:cursor-not-allowed" : ""}
                 onClick={() => handleDelete({ key })}
               >

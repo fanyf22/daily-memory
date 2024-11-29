@@ -1,12 +1,25 @@
-import { type Day, dayToIndex } from "@lib/date.ts";
+import { type Day, dayToIndex, type Time } from "@lib/datetime.ts";
+import { migrate } from "@lib/migration.ts";
 import type { Key } from "react";
+
+const TASK_VERSION = 1;
 
 export interface Task {
   key: Key;
   title: string;
   estimated: string;
+  time: Time | null;
   finished: boolean;
   date: Day;
+
+  /**
+   * This is used to migrate the task data when the schema changes.
+   *
+   * Version lists:
+   * - undefined: title, estimated, finished, date
+   * - 1: title, estimated, time, finished, date
+   */
+  version: number;
 }
 
 export type Tasks = { [P in number]: Task[] };
@@ -17,30 +30,28 @@ export function saveTasks(tasks: Tasks) {
   }
 }
 
-export function loadTasks(tasks: Tasks, date: Day): Tasks | undefined {
+export function loadTasks(tasks: Tasks, date: Day): Tasks {
   const day = dayToIndex(date);
   if (day in tasks) {
-    return undefined;
+    return tasks;
   }
   const task = JSON.parse(localStorage.getItem(day.toString()) ?? "[]") as Task[];
-  return { ...tasks, [day]: task };
+  const migrated = migrate(task);
+
+  saveTasks({ [day]: migrated });
+  return { ...tasks, [day]: migrated };
 }
 
-export function createTask(tasks: Tasks, task: Omit<Task, "key">): Tasks {
+export function createTask(tasks: Tasks, task: Omit<Task, "key" | "version">): Tasks {
   const day = dayToIndex(task.date);
-  const taskWithKey = { ...task, key: crypto.randomUUID() };
-  return { ...tasks, [day]: [...(tasks[day] ?? []), taskWithKey] };
-}
-
-export function deleteTask(tasks: Tasks, task: Task): Tasks {
-  const day = dayToIndex(task.date);
-  return { ...tasks, [day]: tasks[day].filter((t) => t.key !== task.key) };
+  const fullTask = { ...task, key: crypto.randomUUID(), version: TASK_VERSION };
+  return { ...tasks, [day]: [...(tasks[day] ?? []), fullTask] };
 }
 
 export function updateTasks(tasks: Tasks, task: Task[], date: Day): Tasks {
   return { ...tasks, [dayToIndex(date)]: task.filter((task) => task.title) };
 }
 
-export function getTasks(tasks: Tasks, date: Day): Task[] {
-  return tasks[dayToIndex(date)] ?? [];
+export function getTasks(tasks: Tasks, date: Day): Task[] | undefined {
+  return tasks[dayToIndex(date)];
 }

@@ -1,6 +1,6 @@
 import { DoubleLeftOutlined, DoubleRightOutlined } from "@ant-design/icons";
 import TaskTable from "@components/task-table.tsx";
-import { type Day, nextDay, previousDay } from "@lib/date.ts";
+import { type Day, dayjsToDay, dayToDayjs, nextDay, previousDay } from "@lib/datetime.ts";
 import {
   createTask,
   getTasks,
@@ -25,9 +25,8 @@ const HomePage: FC = () => {
   });
 
   const updateTask = (date: Day) => {
-    const loaded = loadTasks(tasks, date);
-    if (loaded !== undefined) {
-      setTasks(loaded);
+    if (getTasks(tasks, date) === undefined) {
+      setTasks(loadTasks(tasks, date));
     }
   };
 
@@ -47,6 +46,7 @@ const HomePage: FC = () => {
       createTask(tasks, {
         title: "",
         estimated: "",
+        time: null,
         finished: false,
         date,
       })
@@ -79,7 +79,7 @@ const HomePage: FC = () => {
 
   const taskList = useMemo(() => getTasks(tasks, date), [tasks, date]);
   const finished = useMemo(
-    () => taskList.reduce((count, { finished }) => (finished ? count + 1 : count), 0),
+    () => taskList?.reduce((count, { finished }) => (finished ? count + 1 : count), 0),
     [taskList]
   );
 
@@ -93,10 +93,8 @@ const HomePage: FC = () => {
               <Button icon={<DoubleLeftOutlined />} onClick={() => updateDate(previousDay(date))} />
             </Tooltip>
             <DatePicker
-              value={dayjs().year(date.year).month(date.month).date(date.day)}
-              onChange={(date) => {
-                updateDate({ year: date.year(), month: date.month(), day: date.date() });
-              }}
+              value={dayToDayjs(date)}
+              onChange={(date) => (date ? updateDate(dayjsToDay(date)) : null)}
             />
             <Tooltip title="Next day">
               <Button icon={<DoubleRightOutlined />} onClick={() => updateDate(nextDay(date))} />
@@ -104,10 +102,12 @@ const HomePage: FC = () => {
           </Space>
           <Button onClick={handleCreate}>New Task</Button>
         </Flex>
-        <TaskTable tasks={taskList} setEditing={setEditing} onChange={handleChange} />
-        {!taskList.length || taskList.some((task) => !task.finished) ? (
+        <TaskTable tasks={taskList!} setEditing={setEditing} onChange={handleChange} />
+        {editing ? null : !taskList?.length ? (
+          <p className="text-yellow-700 text-center">No task for today? Let's create one!</p>
+        ) : taskList.some((task) => !task.finished) ? (
           <p className="text-stone-600 text-center">
-            You have finished {finished} out of {taskList.length} tasks. Cheer up!
+            You have finished {finished} out of {taskList?.length} tasks. Cheer up!
           </p>
         ) : (
           <p className="text-red-700 text-center">
