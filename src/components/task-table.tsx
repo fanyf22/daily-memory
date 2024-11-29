@@ -12,7 +12,15 @@ import {
   Tooltip,
 } from "antd";
 import type { PickerRef } from "rc-picker";
-import { type FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type FC,
+  type KeyboardEventHandler,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 function modify<T>(array: T[], modifier: (array: T[]) => T[] | undefined | void = () => {}): T[] {
   const cloned = [...array];
@@ -104,6 +112,16 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
     [editing, messageApi, onChange, tasks]
   );
 
+  const onKeyDown = useCallback<KeyboardEventHandler>(
+    (e) => {
+      console.log(e);
+      if (e.key == "Escape") {
+        handleCancel();
+      }
+    },
+    [handleCancel]
+  );
+
   const columns: TableProps<Task>["columns"] = [
     {
       title: (
@@ -125,6 +143,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
               className="w-36"
               onChange={(e) => setTitle(e.target.value)}
               onPressEnter={() => estimatedEditor.current?.focus()}
+              onKeyDown={onKeyDown}
             />
           );
         } else {
@@ -154,6 +173,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
               className="w-36"
               onChange={(e) => setEstimated(e.target.value)}
               onPressEnter={() => timeEditor.current?.focus()}
+              onKeyDown={onKeyDown}
             />
           );
         } else {
@@ -181,6 +201,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
               format="HH:mm"
               defaultValue={time ? timeToDayjs(time) : null}
               onChange={(time) => setTime(dayjsToTime(time))}
+              onKeyDown={onKeyDown}
             />
           );
         } else {
