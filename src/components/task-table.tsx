@@ -9,6 +9,7 @@ import {
   Table,
   type TableProps,
   TimePicker,
+  Tooltip,
 } from "antd";
 import type { PickerRef } from "rc-picker";
 import { type FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -105,7 +106,11 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
 
   const columns: TableProps<Task>["columns"] = [
     {
-      title: "Title",
+      title: (
+        <Tooltip title="Describe the task you want to do." className="hover:cursor-default">
+          Title
+        </Tooltip>
+      ),
       dataIndex: "title",
       key: "title",
       minWidth: 200,
@@ -128,7 +133,14 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
       },
     },
     {
-      title: "Estimated Duration",
+      title: (
+        <Tooltip
+          title="Estimate how long you need to finish the task"
+          className="hover:cursor-default"
+        >
+          Estimated Duration
+        </Tooltip>
+      ),
       dataIndex: "estimated",
       key: "estimated",
       align: "center",
@@ -150,7 +162,14 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
       },
     },
     {
-      title: "Executed Time",
+      title: (
+        <Tooltip
+          title="Set the time you are scheduled to do the task."
+          className="hover:cursor-default"
+        >
+          Executed Time
+        </Tooltip>
+      ),
       dataIndex: "time",
       key: "time",
       align: "center",
@@ -170,7 +189,14 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
       },
     },
     {
-      title: "Finished",
+      title: (
+        <Tooltip
+          title="Whether the task has been finished or not."
+          className="hover:cursor-default"
+        >
+          Finished
+        </Tooltip>
+      ),
       dataIndex: "finished",
       key: "finished",
       align: "center",
@@ -193,7 +219,11 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
       ),
     },
     {
-      title: "Operation",
+      title: (
+        <Tooltip title="Edit or delete tasks" className="hover:cursor-default">
+          Operation
+        </Tooltip>
+      ),
       key: "operation",
       align: "center",
       render: (_, { key, title, estimated }) => (
