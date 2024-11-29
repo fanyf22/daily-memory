@@ -1,6 +1,6 @@
-import { DoubleLeftOutlined, DoubleRightOutlined } from "@ant-design/icons";
+import DateInput from "@components/date-input.tsx";
 import TaskTable from "@components/task-table.tsx";
-import { type Day, dayjsToDay, dayToDayjs, nextDay, previousDay } from "@lib/datetime.ts";
+import { type Day } from "@lib/datetime.ts";
 import {
   createTask,
   getTasks,
@@ -10,11 +10,11 @@ import {
   type Tasks,
   updateTasks,
 } from "@lib/task.ts";
-import { Button, DatePicker, Flex, message, Space, Tooltip } from "antd";
+import { Button, Flex, message, Space } from "antd";
 import dayjs from "dayjs";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
-const HomePage: FC = () => {
+const TasksPage: FC = () => {
   const [tasks, setTasks] = useState<Tasks>({});
   const [editing, setEditing] = useState(false);
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 3 });
@@ -28,11 +28,6 @@ const HomePage: FC = () => {
     if (getTasks(tasks, date) === undefined) {
       setTasks(loadTasks(tasks, date));
     }
-  };
-
-  const updateDate = (date: Day) => {
-    setDate(date);
-    updateTask(date);
   };
 
   updateTask(date);
@@ -88,18 +83,7 @@ const HomePage: FC = () => {
       {contextHolder}
       <Space direction="vertical" size="middle">
         <Flex gap="large" justify="space-between" className="pl-2 pr-2">
-          <Space size="small">
-            <Tooltip title="Previous day">
-              <Button icon={<DoubleLeftOutlined />} onClick={() => updateDate(previousDay(date))} />
-            </Tooltip>
-            <DatePicker
-              value={dayToDayjs(date)}
-              onChange={(date) => (date ? updateDate(dayjsToDay(date)) : null)}
-            />
-            <Tooltip title="Next day">
-              <Button icon={<DoubleRightOutlined />} onClick={() => updateDate(nextDay(date))} />
-            </Tooltip>
-          </Space>
+          <DateInput date={date} onChange={setDate} />
           <Button onClick={handleCreate}>New Task</Button>
         </Flex>
         <TaskTable tasks={taskList!} setEditing={setEditing} onChange={handleChange} />
@@ -121,4 +105,4 @@ const HomePage: FC = () => {
   );
 };
 
-export default HomePage;
+export default TasksPage;

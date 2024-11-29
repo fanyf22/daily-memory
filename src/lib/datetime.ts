@@ -37,7 +37,7 @@ export const previousDay: (date: Day) => Day = ({ year, month, day }) => {
     if (month == 1) {
       return { year: year - 1, month: 12, day: 31 };
     } else {
-      return { year, month: month - 1, day: getDays(year)[month - 2] };
+      return { year, month: month - 1, day: getDays(year)[month - 1] };
     }
   } else {
     return { year, month, day: day - 1 };
@@ -64,6 +64,22 @@ export function dayjsToTime(time: dayjs.Dayjs | null): Time | null {
   return time ? { hour: time.hour(), minute: time.minute() } : null;
 }
 
+export function formatDay({ year, month, day }: Day): string {
+  return `${year}-${(month + 1).toString().padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+}
+
 export function formatTime({ hour, minute }: Time): string {
   return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+}
+
+export function currentDay(): Day {
+  return dayjsToDay(dayjs());
+}
+
+export function currentTime(): Time {
+  return dayjsToTime(dayjs())!;
+}
+
+export function compareDay(a: Day, b: Day): number {
+  return dayToIndex(a) - dayToIndex(b);
 }
