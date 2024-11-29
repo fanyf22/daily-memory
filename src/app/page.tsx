@@ -68,7 +68,7 @@ const HomePage: FC = () => {
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (!editing && e.key == "Enter") {
+      if (!editing && e.key == "Enter" && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
         handleCreate();
       }
     };

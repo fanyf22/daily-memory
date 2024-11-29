@@ -114,8 +114,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
 
   const onKeyDown = useCallback<KeyboardEventHandler>(
     (e) => {
-      console.log(e);
-      if (e.key == "Escape") {
+      if (e.key == "Escape" && !e.ctrlKey && !e.altKey && !e.metaKey && !e.shiftKey) {
         handleCancel();
       }
     },
