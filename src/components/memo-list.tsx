@@ -132,7 +132,7 @@ const MemoList: FC<MemoListProps> = ({ memories, setEditing = () => {}, onChange
       </table>
     );
   } else {
-    return <Empty description="No Memory" className="w-[36rem]" />;
+    return <Empty description="No Memory" className="w-[33rem]" />;
   }
 };
 

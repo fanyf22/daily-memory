@@ -139,7 +139,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
               ref={titleEditor}
               defaultValue={title}
               placeholder="Task Title"
-              className="w-36"
+              className="w-32 text-center"
               onChange={(e) => setTitle(e.target.value)}
               onPressEnter={() => estimatedEditor.current?.focus()}
               onKeyDown={onKeyDown}
@@ -169,7 +169,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
               ref={estimatedEditor}
               defaultValue={esimated}
               placeholder="Estimated Duration"
-              className="w-36"
+              className="w-32 text-center"
               onChange={(e) => setEstimated(e.target.value)}
               onPressEnter={() => timeEditor.current?.focus()}
               onKeyDown={onKeyDown}
@@ -197,6 +197,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
           return (
             <TimePicker
               ref={timeEditor}
+              className="w-24"
               format="HH:mm"
               defaultValue={time ? timeToDayjs(time) : null}
               onChange={(time) => setTime(dayjsToTime(time))}
