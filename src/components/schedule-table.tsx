@@ -84,16 +84,16 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
   return (
     <>
       {contextHolder}
-      <Tooltip title={hoverHint}>
-        <td
-          className={`${tableCells} ${
-            time[0] == 0 || time[0] == 6 ? "bg-amber-50" : ""
-          } hover:cursor-pointer hover:bg-sky-50`}
-          onClick={startEditing}
-        >
+      <td
+        className={`${tableCells} ${
+          time[0] == 0 || time[0] == 6 ? "bg-amber-50" : ""
+        } hover:cursor-pointer hover:bg-sky-50`}
+        onClick={startEditing}
+      >
+        <Tooltip title={hoverHint} placement="right">
           {schedule?.title}
-        </td>
-      </Tooltip>
+        </Tooltip>
+      </td>
       <Modal
         className="max-w-[24rem]"
         title="Edit Schedule"
