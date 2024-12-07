@@ -1,4 +1,3 @@
-import { type Day, dayInWeek } from "@lib/datetime.ts";
 import {
   deleteSchedule,
   type Schedule,
@@ -15,7 +14,6 @@ const tableCells = "w-40 h-16 text-center border";
 interface ScheduleTableItemProps {
   schedule: Schedule | undefined;
   time: ScheduleTime;
-  isToday: boolean;
   schedules?: Schedules;
   onChange?: (schedule: Schedule | undefined) => void;
 }
@@ -23,7 +21,6 @@ interface ScheduleTableItemProps {
 const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
   schedule,
   time,
-  isToday,
   schedules = [],
   onChange = () => {},
 }) => {
@@ -90,7 +87,7 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
       <Tooltip title={hoverHint}>
         <td
           className={`${tableCells} ${
-            isToday ? "bg-amber-50" : time[0] == 0 || time[0] == 6 ? "bg-violet-50" : ""
+            time[0] == 0 || time[0] == 6 ? "bg-amber-50" : ""
           } hover:cursor-pointer hover:bg-sky-50`}
           onClick={startEditing}
         >
@@ -153,12 +150,11 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
 
 export interface ScheduleTableProps {
   schedules: Schedules;
-  date: Day;
   autoComplete?: string[];
   onChange?: (schedules: Schedules) => void;
 }
 
-const ScheduleTable: FC<ScheduleTableProps> = ({ schedules, date, onChange = () => {} }) => {
+const ScheduleTable: FC<ScheduleTableProps> = ({ schedules, onChange = () => {} }) => {
   const tabledSchedules: (Schedule | undefined)[][] = new Array(6)
     .fill(undefined)
     .map(() => new Array(7).fill(undefined));
@@ -186,7 +182,6 @@ const ScheduleTable: FC<ScheduleTableProps> = ({ schedules, date, onChange = () 
                 key={day}
                 time={[day, period]}
                 schedule={schedule}
-                isToday={dayInWeek(date) == day}
                 schedules={schedules}
                 onChange={(newSchedule) => {
                   if (newSchedule) {
