@@ -113,7 +113,9 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
       >
         <Row className="mt-8 mb-4">
           <Col span={6} className="flex flex-col justify-around">
-            <p className="text-right pr-2">Title:</p>
+            <p className="text-right pr-2">
+              <span className="text-red-500">*</span> Title:
+            </p>
           </Col>
           <Col span={16}>
             <AutoComplete
