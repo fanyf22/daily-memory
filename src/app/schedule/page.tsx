@@ -29,8 +29,9 @@ const SchedulePage: FC = () => {
           </Popconfirm>
         </Flex>
         <ScheduleTable schedules={schedules} date={date} onChange={updateSchedules} />
-        <p className={count ? "text-red-700" : "text-yellow-700"}>
-          You have {count} classes today. {count ? "Cheer up!" : "Have a rest!"}
+        <p className={count ? "text-red-700" : "text-green-700"}>
+          You have {count ? count : "no"} class schedules today.{" "}
+          {count ? "Cheer up!" : "Have a rest!"}
         </p>
       </div>
     </div>
