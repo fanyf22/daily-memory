@@ -6,7 +6,7 @@ import {
   type ScheduleTime,
   updateSchedule,
 } from "@lib/schedule.ts";
-import { AutoComplete, Button, Col, Input, message, Modal, Row, Tooltip } from "antd";
+import { AutoComplete, Button, Col, message, Modal, Row, Tooltip } from "antd";
 import { type FC, useState } from "react";
 
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -34,10 +34,6 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
       : "No location is specified"
     : "";
 
-  const autoCompleteOptions = Array.from(new Set(schedules.map((schedule) => schedule.title))).map(
-    (value) => ({ value })
-  );
-
   const handleSelect = (value: string) => {
     const schedule = schedules.find((schedule) => schedule.title === value);
     if (schedule) {
@@ -48,6 +44,16 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
   const [editing, setEditing] = useState(false);
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
+
+  const titleOptions = Array.from(new Set(schedules.map((schedule) => schedule.title))).map(
+    (value) => ({ value })
+  );
+
+  const locationOptions = Array.from(
+    new Set(
+      schedules.filter((schedule) => schedule.title == title).map((schedule) => schedule.location)
+    )
+  ).map((value) => ({ value }));
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -113,7 +119,7 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
             <AutoComplete
               value={title}
               placeholder="Enter the title"
-              options={autoCompleteOptions}
+              options={titleOptions}
               onSelect={handleSelect}
               onChange={setTitle}
               className="w-full"
@@ -125,12 +131,12 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
             <p className="text-right pr-2">Location:</p>
           </Col>
           <Col span={16}>
-            <Input
+            <AutoComplete
               value={location}
-              allowClear={true}
               placeholder="Enter the location"
-              onChange={(e) => setLocation(e.target.value)}
-              onPressEnter={save}
+              options={locationOptions}
+              onChange={setLocation}
+              className="w-full"
             />
           </Col>
         </Row>
