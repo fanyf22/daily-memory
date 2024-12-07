@@ -46,7 +46,9 @@ const SchedulePage: FC = () => {
           <div className="flex-1 text-center">
             <p className={count ? "text-yellow-700" : "text-green-700"}>
               You have {count ? count : "no"} class schedules today.{" "}
-              {count ? "Cheer up!" : "Have a rest!"}
+              <span className="text-red-700 font-semibold">
+                {count ? "Cheer up!" : "Do your homework!"}
+              </span>
             </p>
           </div>
           <Space direction="horizontal" size="middle">
