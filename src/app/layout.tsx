@@ -3,7 +3,7 @@ import { ConfigProvider } from "antd";
 import { FC } from "react";
 import { Outlet, useLocation } from "react-router";
 
-const repository = "https://github.com/fanyf22/data-memory";
+const repository = "https://github.com/fanyf22/daily-memory";
 
 const navigators: { [P in string]: { label: string; title: string } } = {
   "/tasks": {
