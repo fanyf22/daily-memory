@@ -12,6 +12,10 @@ const navigators: { [P in string]: { label: string; title: string } } = {
     label: "Memory",
     title: "Record your everyday feelings, experience and perception.",
   },
+  "/schedule": {
+    label: "Schedule",
+    title: "Arrange your class schedules and stick to it.",
+  },
 };
 
 const RootLayout: FC = () => {

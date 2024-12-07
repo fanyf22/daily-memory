@@ -44,6 +44,10 @@ export const previousDay: (date: Day) => Day = ({ year, month, day }) => {
   }
 };
 
+export function dayInWeek(date: Day): number {
+  return dayToDayjs(date).day();
+}
+
 export function dayToIndex(date: Day): number {
   return (date.year - 2024) * 366 + date.month * 31 + date.day;
 }
