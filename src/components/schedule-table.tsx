@@ -45,13 +45,16 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
 
-  const titleOptions = Array.from(new Set(schedules.map((schedule) => schedule.title))).map(
-    (value) => ({ value })
-  );
+  const titleOptions = Array.from(new Set(schedules.map((schedule) => schedule.title)))
+    .sort()
+    .map((value) => ({ value }));
 
   const locationOptions = Array.from(
     new Set(
-      schedules.filter((schedule) => schedule.title == title).map((schedule) => schedule.location)
+      schedules
+        .filter((schedule) => schedule.title == title)
+        .map((schedule) => schedule.location)
+        .sort()
     )
   ).map((value) => ({ value }));
 
