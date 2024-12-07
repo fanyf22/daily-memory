@@ -27,7 +27,6 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
   schedules = [],
   onChange = () => {},
 }) => {
-  const color = isToday ? "bg-amber-50" : "";
   const hoverHint = schedule
     ? schedule.location
       ? schedule.location
@@ -90,7 +89,9 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
       {contextHolder}
       <Tooltip title={hoverHint}>
         <td
-          className={`${tableCells} ${color} hover:cursor-pointer hover:bg-sky-50`}
+          className={`${tableCells} ${
+            isToday ? "bg-amber-50" : time[0] == 0 || time[0] == 6 ? "bg-violet-50" : ""
+          } hover:cursor-pointer hover:bg-sky-50`}
           onClick={startEditing}
         >
           {schedule?.title}
