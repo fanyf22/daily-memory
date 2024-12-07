@@ -9,7 +9,6 @@ import { AutoComplete, Button, Col, message, Modal, Row, Tooltip } from "antd";
 import { type FC, useState } from "react";
 
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const tableCells = "w-40 h-16 text-center border";
 
 interface ScheduleTableItemProps {
   schedule: Schedule | undefined;
@@ -85,9 +84,9 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
     <>
       {contextHolder}
       <td
-        className={`${tableCells} ${
+        className={`${
           time[0] == 0 || time[0] == 6 ? "bg-amber-50" : ""
-        } hover:cursor-pointer hover:bg-sky-50`}
+        } w-40 h-16 border text-center hover:cursor-pointer hover:bg-sky-50`}
         onClick={startEditing}
       >
         <Tooltip title={hoverHint} placement="right">
@@ -149,7 +148,7 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
 };
 
 export interface ScheduleTableProps {
-  schedules: Schedules;
+  schedules: Scheduleks;
   dayInWeek: number;
   onChange?: (schedules: Schedules) => void;
 }
@@ -168,7 +167,7 @@ const ScheduleTable: FC<ScheduleTableProps> = ({ schedules, dayInWeek, onChange 
       <thead>
         <tr>
           {dayNames.map((dayName, index) => (
-            <td className={`${tableCells} font-semibold bg-gray-50`} key={index}>
+            <td className={`w-40 h-16 text-center border font-semibold bg-gray-50`} key={index}>
               <p className={dayInWeek == index ? "text-amber-900 text-lg" : ""}>{dayName}</p>
             </td>
           ))}

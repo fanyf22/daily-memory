@@ -3,6 +3,8 @@ import { ConfigProvider } from "antd";
 import { FC } from "react";
 import { Outlet, useLocation } from "react-router";
 
+const repository = "https://github.com/fanyf22/data-memory";
+
 const navigators: { [P in string]: { label: string; title: string } } = {
   "/tasks": {
     label: "Tasks",
@@ -42,7 +44,7 @@ const RootLayout: FC = () => {
             </ul>
             <div className="flex-1"></div>
             <p className="italic text-gray-700 font-sans">{navigators[pathname]?.title ?? ""}</p>
-            <a target="_blank" href="https://github.com/fanyf22/daily-memory.git">
+            <a target="_blank" href={repository}>
               <GithubOutlined style={{ fontSize: "1.5rem" }} />
             </a>
           </div>
@@ -53,7 +55,15 @@ const RootLayout: FC = () => {
           </main>
           <footer className="pb-2">
             <p className="text-center text-sm text-gray-500">
-              &copy; {new Date().getFullYear()} Philip Fan. All rights reserved.
+              &copy; {new Date().getFullYear()} Philip Fan. Licensed under{" "}
+              <a
+                className="text-blue-600 hover:text-blue-500 hover:underline"
+                href={repository + "/blob/main/LICENSE"}
+                target="_blank"
+              >
+                MIT License
+              </a>
+              .
             </p>
           </footer>
         </div>
