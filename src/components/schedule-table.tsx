@@ -10,7 +10,7 @@ import { AutoComplete, Button, Col, message, Modal, Row, Tooltip } from "antd";
 import { type FC, useState } from "react";
 
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const tableCells = "w-32 h-16 text-center border";
+const tableCells = "w-40 h-16 text-center border";
 
 interface ScheduleTableItemProps {
   schedule: Schedule | undefined;
