@@ -150,11 +150,11 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
 
 export interface ScheduleTableProps {
   schedules: Schedules;
-  autoComplete?: string[];
+  dayInWeek: number;
   onChange?: (schedules: Schedules) => void;
 }
 
-const ScheduleTable: FC<ScheduleTableProps> = ({ schedules, onChange = () => {} }) => {
+const ScheduleTable: FC<ScheduleTableProps> = ({ schedules, dayInWeek, onChange = () => {} }) => {
   const tabledSchedules: (Schedule | undefined)[][] = new Array(6)
     .fill(undefined)
     .map(() => new Array(7).fill(undefined));
@@ -169,7 +169,7 @@ const ScheduleTable: FC<ScheduleTableProps> = ({ schedules, onChange = () => {} 
         <tr>
           {dayNames.map((dayName, index) => (
             <td className={`${tableCells} font-semibold bg-gray-50`} key={index}>
-              {dayName}
+              <p className={dayInWeek == index ? "text-amber-900 text-lg" : ""}>{dayName}</p>
             </td>
           ))}
         </tr>

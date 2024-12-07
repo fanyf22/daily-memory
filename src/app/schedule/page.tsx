@@ -38,11 +38,17 @@ const SchedulePage: FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-10">
+    <div className="flex flex-col items-center p-16">
       {contextHolder}
       <div className="flex flex-col w-fit items-center gap-4">
-        <Flex className="w-full pl-4 pr-4" gap="large" justify="space-between">
+        <Flex className="w-full pl-4 pr-4" gap="large" align="center">
           <DateInput date={date} onChange={setDate} />
+          <div className="flex-1 text-center">
+            <p className={count ? "text-yellow-700" : "text-green-700"}>
+              You have {count ? count : "no"} class schedules today.{" "}
+              {count ? "Cheer up!" : "Have a rest!"}
+            </p>
+          </div>
           <Space direction="horizontal" size="middle">
             <Button onClick={handleCopy}>Copy</Button>
             <Button onClick={handleDownload}>Download</Button>
@@ -55,12 +61,12 @@ const SchedulePage: FC = () => {
           </Space>
         </Flex>
         <div ref={scheduleRef}>
-          <ScheduleTable schedules={schedules} onChange={updateSchedules} />
+          <ScheduleTable
+            schedules={schedules}
+            dayInWeek={dayInWeek(date)}
+            onChange={updateSchedules}
+          />
         </div>
-        <p className={count ? "text-red-700" : "text-green-700"}>
-          You have {count ? count : "no"} class schedules today.{" "}
-          {count ? "Cheer up!" : "Have a rest!"}
-        </p>
       </div>
     </div>
   );
