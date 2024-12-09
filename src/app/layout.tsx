@@ -12,7 +12,7 @@ const RootLayout: FC = () => {
   return (
     <ConfigProvider theme={{ token: { fontFamily: "'Montserrat Variable'" } }}>
       <App className="h-full">
-        <div className="h-full flex flex-col">
+        <div className="h-full flex flex-col text-base">
           <header className="pt-4 pb-4 pl-6 pr-6 shadow shadow-gray-200">
             <div className="flex flex-row gap-16 items-baseline">
               <h1 className="text-3xl font-serif">
