@@ -1,10 +1,10 @@
 import { dayjsToTime, formatTime, type Time, timeToDayjs } from "@lib/datetime.ts";
 import type { Task } from "@lib/task.ts";
 import {
+  App,
   Checkbox,
   Input,
   type InputRef,
-  message,
   Space,
   Table,
   type TableProps,
@@ -61,7 +61,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
     titleEditor.current?.focus();
   }, [editing]);
 
-  const [messageApi, contextHolder] = message.useMessage({ maxCount: 3 });
+  const { message } = App.useApp();
 
   const handleOk = useCallback(() => {
     setInnerEditing(undefined);
@@ -91,25 +91,25 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
   const handleEdit = useCallback(
     ({ key, title, estimated }: Pick<Task, "key" | "title" | "estimated">) => {
       if (editing) {
-        messageApi.error("Please finish editing before starting a new one.").then();
+        message.error("Please finish editing before starting a new one.").then();
         return;
       }
       setInnerEditing(key);
       setTitle(title);
       setEstimated(estimated);
     },
-    [editing, messageApi]
+    [editing, message]
   );
 
   const handleDelete = useCallback(
     ({ key }: Pick<Task, "key">) => {
       if (editing) {
-        messageApi.error("Please finish editing before deleting.").then();
+        message.error("Please finish editing before deleting.").then();
       } else {
         onChange(tasks.filter((task) => task.key != key));
       }
     },
-    [editing, messageApi, onChange, tasks]
+    [editing, message, onChange, tasks]
   );
 
   const onKeyDown = useCallback<KeyboardEventHandler>(
@@ -275,12 +275,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
     },
   ];
 
-  return (
-    <>
-      {contextHolder}
-      <Table columns={columns} dataSource={tasks} pagination={false} />
-    </>
-  );
+  return <Table columns={columns} dataSource={tasks} pagination={false} />;
 };
 
 export default TaskTable;

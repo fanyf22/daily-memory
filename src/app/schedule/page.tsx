@@ -3,7 +3,7 @@ import ScheduleTable from "@components/schedule-table.tsx";
 import { currentDay, dayInWeek } from "@lib/datetime.ts";
 import { loadSchedules, saveSchedules, type Schedules } from "@lib/schedule.ts";
 import { screenshotAndCopy, screenshotAndDownload } from "@lib/screenshot.ts";
-import { Button, Flex, message, Popconfirm, Space } from "antd";
+import { App, Button, Flex, Popconfirm, Space } from "antd";
 import { type FC, useRef, useState } from "react";
 
 const SchedulePage: FC = () => {
@@ -17,29 +17,28 @@ const SchedulePage: FC = () => {
 
   const count = schedules.filter((schedule) => schedule.time[0] == dayInWeek(date)).length;
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
 
   const scheduleRef = useRef<HTMLDivElement>(null);
 
   const handleCopy = () => {
     if (scheduleRef.current) {
       screenshotAndCopy(scheduleRef.current)
-        .then(() => messageApi.success("Copied to clipboard!"))
-        .catch(() => messageApi.error("Failed to copy to clipboard."));
+        .then(() => message.success("Copied to clipboard!"))
+        .catch(() => message.error("Failed to copy to clipboard."));
     }
   };
 
   const handleDownload = () => {
     if (scheduleRef.current) {
       screenshotAndDownload(scheduleRef.current)
-        .then(() => messageApi.success("Downloaded!"))
-        .catch(() => messageApi.error("Failed to download."));
+        .then(() => message.success("Downloaded!"))
+        .catch(() => message.error("Failed to download."));
     }
   };
 
   return (
     <div className="flex flex-col items-center p-16">
-      {contextHolder}
       <div className="flex flex-col w-fit items-center gap-4">
         <Flex className="w-full pl-4 pr-4" gap="large" align="center">
           <DateInput date={date} onChange={setDate} />

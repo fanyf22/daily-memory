@@ -5,7 +5,7 @@ import {
   type ScheduleTime,
   updateSchedule,
 } from "@lib/schedule.ts";
-import { AutoComplete, Button, Col, message, Modal, Row, Tooltip } from "antd";
+import { App, AutoComplete, Button, Col, Modal, Row, Tooltip } from "antd";
 import { type FC, useState } from "react";
 
 const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -53,7 +53,7 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
     )
   ).map((value) => ({ value }));
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const { message } = App.useApp();
 
   const startEditing = () => {
     setEditing(true);
@@ -67,7 +67,7 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
       setEditing(false);
       onChange?.({ time, title, location });
     } else {
-      messageApi.error("Title is required").then();
+      message.error("Title is required").then();
     }
   };
 
@@ -82,7 +82,6 @@ const ScheduleTableItem: FC<ScheduleTableItemProps> = ({
 
   return (
     <>
-      {contextHolder}
       <td
         className={`${
           time[0] == 0 || time[0] == 6 ? "bg-amber-50" : ""

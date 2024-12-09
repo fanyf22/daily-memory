@@ -10,14 +10,14 @@ import {
   type Tasks,
   updateTasks,
 } from "@lib/task.ts";
-import { Button, Flex, message, Space } from "antd";
+import { App, Button, Flex, Space } from "antd";
 import dayjs from "dayjs";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 
 const TasksPage: FC = () => {
   const [tasks, setTasks] = useState<Tasks>({});
   const [editing, setEditing] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage({ maxCount: 3 });
+  const { message } = App.useApp();
 
   const [date, setDate] = useState<Day>(() => {
     const date = dayjs();
@@ -34,7 +34,7 @@ const TasksPage: FC = () => {
 
   const handleCreate = useCallback(() => {
     if (editing) {
-      messageApi.error("Please finish editing before creating a new one.").then();
+      message.error("Please finish editing before creating a new one.").then();
       return;
     }
     setTasks(
@@ -46,7 +46,7 @@ const TasksPage: FC = () => {
         date,
       })
     );
-  }, [date, editing, messageApi, tasks]);
+  }, [date, editing, message, tasks]);
 
   const handleChange = useCallback(
     (taskList: Task[]) => {
@@ -80,7 +80,6 @@ const TasksPage: FC = () => {
 
   return (
     <div className="h-full flex flex-col items-center p-16">
-      {contextHolder}
       <Space direction="vertical" size="middle">
         <Flex gap="large" justify="space-between" className="pl-2 pr-2">
           <DateInput date={date} onChange={setDate} />
