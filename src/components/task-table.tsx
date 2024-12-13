@@ -67,6 +67,7 @@ const TaskTable: FC<TaskTableProps> = ({ tasks, setEditing = () => {}, onChange 
     setInnerEditing(undefined);
     setTitle("");
     setEstimated("");
+    setTime(null);
     onChange(
       modify(tasks, (tasks) => {
         for (const task of tasks) {
